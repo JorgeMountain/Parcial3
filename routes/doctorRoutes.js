@@ -6,6 +6,16 @@ import validateInputs from '../middlewares/validateInputs.js';
 
 const router = Router();
 
+// Ruta para saludar con un "Hola gigante"
+router.get('/saludo', (req, res) => {
+  res.send('¡HOLA GIGANTE!');
+});
+
+// Ruta de prueba para verificar que la configuración funciona correctamente
+router.get('/test', (req, res) => {
+  res.send('Ruta de prueba funcionando correctamente.');
+});
+
 // Ruta para el inicio de sesión del médico
 router.post(
   '/login',
@@ -13,7 +23,7 @@ router.post(
     body('email').isEmail().withMessage('Valid email is required'),
     body('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long')
   ],
-  validateInputs,
+  //validateInputs,
   doctorController.login
 );
 

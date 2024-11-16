@@ -1,16 +1,19 @@
 # Usa una imagen de Node.js como base
 FROM node:16-alpine
 
-# Establece el directorio de trabajo
+# Instalar herramientas necesarias para compilar bcrypt
+RUN apk add --no-cache make gcc g++ python3
+
+# Establecer el directorio de trabajo
 WORKDIR /usr/src/app
 
-# Copia los archivos package.json y package-lock.json
+# Copiar los archivos package.json y package-lock.json al contenedor
 COPY package*.json ./
 
-# Instala las dependencias
+# Instalar las dependencias
 RUN npm install
 
-# Copia el resto del código al contenedor
+# Copiar el resto del código al contenedor
 COPY . .
 
 # Exponer el puerto 3000

@@ -1,4 +1,5 @@
-import pool from '../config.js';
+import pool from '../config/db.js';
+
 
 class PatientModel {
   // Buscar un paciente por su ID

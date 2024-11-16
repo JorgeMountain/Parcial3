@@ -1,4 +1,4 @@
-import pool from '../config.js';
+import pool from '../config/db.js';
 
 class DoctorModel {
   // Buscar un doctor por su email
@@ -44,6 +44,7 @@ class DoctorModel {
   static async deleteAppointment(appointmentId, doctorId) {
     const query = `DELETE FROM appointments WHERE id = $1 AND doctor_id = $2`;
     await pool.query(query, [appointmentId, doctorId]);
+    return "Cita Eliminada ";
   }
 }
 

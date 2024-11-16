@@ -1,7 +1,11 @@
-import { Pool } from 'pg';
+import pkg from 'pg';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Cargar las variables de entorno desde el archivo .env
+// Cargar las variables de entorno desde el archivo .env
+dotenv.config();
+
+// Desestructurar `Pool` desde el paquete `pg`
+const { Pool } = pkg;
 
 // Crear una nueva instancia de Pool para gestionar las conexiones a la base de datos
 const pool = new Pool({
@@ -13,14 +17,13 @@ const pool = new Pool({
 });
 
 // Probar la conexión
-pool.connect((err, client, release) => {
+pool.connect((err) => {
   if (err) {
-    console.error('Error al conectar con la base de datos', err.stack);
+    console.error('Error al conectar con la base de datos:', err.stack);
   } else {
     console.log('Conexión exitosa con la base de datos');
   }
-  release(); // Liberar el cliente una vez probado
 });
 
-// Exportar el pool para que los modelos puedan utilizarlo
+// Exportar el pool para que pueda ser utilizado por los modelos
 export default pool;

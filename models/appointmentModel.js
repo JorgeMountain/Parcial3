@@ -1,7 +1,8 @@
-import pool from '../config.js';
+import pool from '../config/db.js';
+
 
 class AppointmentModel {
-  // Obtener todas las citas (para administradores, opcional)
+  // Obtener todas las citas 
   static async getAllAppointments(date = null, specialtyId = null) {
     let query = `SELECT a.*, d.specialty_id FROM appointments a
                  JOIN doctors d ON a.doctor_id = d.id`;

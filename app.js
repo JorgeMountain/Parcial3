@@ -19,6 +19,11 @@ app.use('/doctor', doctorRoutes); // Rutas relacionadas con doctores
 app.use('/patient', patientRoutes); // Rutas relacionadas con pacientes
 app.use('/appointment', appointmentRoutes); // Rutas generales relacionadas con citas
 
+// Ruta de prueba para verificar si el servidor está funcionando
+app.get('/test', (req, res) => {
+  res.json({ message: 'Ruta de prueba funcionando correctamente!' });
+});
+
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Endpoint not found' });
