@@ -1,49 +1,52 @@
-import express from 'express';
-import DoctorController from '../controllers/doctorController.js';
-import { authMiddleware } from '../middleware/authMiddleware.js';
-import { roleMiddleware } from '../middleware/roleMiddleware.js';
+import { Router } from 'express';
+import { body } from 'express-validator';
+import doctorController from '../controllers/doctorController.js';
+import authMiddleware from '../middlewares/authMiddleware.js';
+import validateInputs from '../middlewares/validateInputs.js';
 
-const router = express.Router();
+const router = Router();
 
-// Iniciar sesión como médico
-router.post('/login', DoctorController.login);
-
-// Obtener las citas del médico autenticado
-router.get(
-    '/appointment',
-    authMiddleware,           // Verifica el token JWT
-    roleMiddleware('doctor'), // Verifica el rol de médico
-    DoctorController.getAppointments
-);
-
-// Crear una nueva cita como médico
+// Ruta para el inicio de sesión del médico
 router.post(
-    '/appointment',
-    authMiddleware,
-    roleMiddleware('doctor'),
-    DoctorController.createAppointment
+  '/login',
+  [
+    body('email').isEmail().withMessage('Valid email is required'),
+    body('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long')
+  ],
+  validateInputs,
+  doctorController.login
 );
 
-// Editar una cita específica
+// Ruta para obtener todas las citas del médico
+router.get('/appointment', authMiddleware, doctorController.getAppointments);
+
+// Ruta para crear una nueva cita
+router.post(
+  '/appointment',
+  [
+    authMiddleware,
+    body('patientId').isInt().withMessage('Valid patient ID is required'),
+    body('date').isISO8601().withMessage('Valid date is required'),
+    body('time').matches(/^([01]\d|2[0-3]):([0-5]\d)$/).withMessage('Valid time in HH:mm format is required')
+  ],
+  validateInputs,
+  doctorController.createAppointment
+);
+
+// Ruta para actualizar una cita específica
 router.put(
-    '/appointment/:appointmentId',
+  '/appointment/:appointmentId',
+  [
     authMiddleware,
-    roleMiddleware('doctor'),
-    DoctorController.updateAppointment
+    body('patientId').isInt().withMessage('Valid patient ID is required'),
+    body('date').isISO8601().withMessage('Valid date is required'),
+    body('time').matches(/^([01]\d|2[0-3]):([0-5]\d)$/).withMessage('Valid time in HH:mm format is required')
+  ],
+  validateInputs,
+  doctorController.updateAppointment
 );
 
-// Eliminar una cita específica
-router.delete(
-    '/appointment/:appointmentId',
-    authMiddleware,
-    roleMiddleware('doctor'),
-    DoctorController.deleteAppointment
-);
-
-// Obtener los datos de un médico específico por ID
-router.get('/:doctorId', DoctorController.getDoctorById);
-
-// Listar las citas de un médico específico
-router.get('/:doctorId/appointment', DoctorController.getAppointmentsByDoctorId);
+// Ruta para eliminar una cita específica
+router.delete('/appointment/:appointmentId', authMiddleware, doctorController.deleteAppointment);
 
 export default router;

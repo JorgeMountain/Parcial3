@@ -1,22 +1,11 @@
-import Appointment from '../models/appointment.js';
+import AppointmentModel from '../models/appointmentModel.js';
 
 class AppointmentService {
-    async getAppointmentById(appointmentId) {
-        const appointment = await Appointment.findById(appointmentId);
-        if (!appointment) {
-            throw new Error('Appointment not found');
-        }
-        return appointment;
-    }
-
-    async createAppointment({ patientId, doctorId, date, time }) {
-        // Aquí puedes verificar si el médico o el paciente ya tienen citas en ese horario
-        return await Appointment.create({ patientId, doctorId, date, time });
-    }
-
-    async deleteAppointment(appointmentId) {
-        return await Appointment.delete(appointmentId);
-    }
+  // Obtener todas las citas (opcional para administración)
+  static async getAllAppointments(date = null, specialtyId = null) {
+    const appointments = await AppointmentModel.getAllAppointments(date, specialtyId);
+    return appointments;
+  }
 }
 
-export default new AppointmentService();
+export default AppointmentService;

@@ -1,15 +1,16 @@
-import { AppointmentService } from '../services/appointmentService.js';
+import AppointmentService from '../services/appointmentService.js';
 
 class AppointmentController {
-    async getAppointmentById(req, res) {
-        const { appointmentId } = req.params;
-        try {
-            const appointment = await AppointmentService.getAppointmentById(appointmentId);
-            res.status(200).json(appointment);
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
+  // Obtener todas las citas 
+  static async getAllAppointments(req, res) {
+    const { date, specialtyId } = req.query; // Opcionalmente filtrar por fecha o especialidad
+    try {
+      const appointments = await AppointmentService.getAllAppointments(date, specialtyId);
+      res.json(appointments);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
+  }
 }
 
-export default new AppointmentController();
+export default AppointmentController;
